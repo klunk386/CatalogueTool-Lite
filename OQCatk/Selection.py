@@ -154,7 +154,7 @@ def MagCodeSelect(Db, MagList, Best=False, Owrite=False):
 
     for I,C in enumerate(Code):
       for M in E['Magnitude']:
-        if C == M['MagCode']:
+        if C == M['MagCode'] or C == '*':
           for T in Type[I]:
             if T == M['MagType']:
 
@@ -200,7 +200,7 @@ def LocCodeSelect(Db, LocList, Best=False, Owrite=False):
 
     for C in LocList:
       for L in E['Location']:
-        if C == L['LocCode']:
+        if C == L['LocCode'] or C == '*':
 
           Event['Location'].append(L)
           if Best:
