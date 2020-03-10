@@ -26,14 +26,17 @@ import OQCatk.CatUtils as CU
 
 #-----------------------------------------------------------------------------------------
 
-def AreaSelect(Db, XY, File=[], Owrite=False, Any=False, Buffer=[], Unwrap=False):
+def AreaSelect(Db, XY, File=None, Owrite=False, Any=False, Buffer=[], Unwrap=False):
 
-  P = CU.Polygon()
-
-  if File:
-    P.Import(XY, Type=File)
+  if isinstance(XY, CU.Polygon):
+    P = XY
   else:
-    P.Load(XY)
+    P = CU.Polygon()
+
+    if File:
+      P.Import(XY, Type=File)
+    else:
+      P.Load(XY)
 
   if Unwrap:
     P.Unwrap()

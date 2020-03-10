@@ -18,6 +18,7 @@
 #
 # Author: Poggi Valerio
 
+import geojson as gjs
 import shapely as shp
 import scipy as scp
 import numpy as np
@@ -356,6 +357,25 @@ def XYToWkt(X, Y):
 
   return WktString
 
+#---------------------------------------------------------------------------------------
+
+def ImportPolygonCollection(FileName, Type='geojson'):
+
+  pc = []
+
+  if Type == 'geojson':
+    with open(FileName) as f:
+      data = gjs.load(f)
+      for feature in data['features']:
+        p = Polygon()
+        p.Load(feature['geometry']['coordinates'][0])
+        pc.append(p)
+
+  else:
+    print('Format not yet supported')
+
+  return pc
+
 #-----------------------------------------------------------------------------------------
 
 class Polygon():
@@ -387,6 +407,33 @@ class Polygon():
 
     else:
       print('Format not recognized')
+
+  #---------------------------------------------------------------------------------------
+
+  def Import (self, FileName, Type='xy'):
+    """
+    Import the coordinate of a single polygon from file
+    """
+
+    with open(FileName, 'r') as f:
+
+      XY = []
+      if Type == 'wkt':
+        XY = f.readline().strip()
+
+      if Type == 'xy':
+        for xy in f:
+          xy = xy.strip()
+          if xy:
+            xy = re.split(',|;| ',xy)
+            XY.append([float(xy[0]), float(xy[1])])
+
+      self.Load(XY)
+      f.close()
+      return
+
+    # Warn user if model file does not exist
+    print('File not found.')
 
   #---------------------------------------------------------------------------------------
 
@@ -437,30 +484,6 @@ class Polygon():
     x, y = B.exterior.xy
     self.x = [i for i in x[:-1]]
     self.y = [i for i in y[:-1]]
-
-  #---------------------------------------------------------------------------------------
-
-  def Import (self, FileName, Type='xy'):
-
-    with open(FileName, 'r') as f:
-
-      XY = []
-      if Type == 'wkt':
-        XY = f.readline().strip()
-
-      if Type == 'xy':
-        for xy in f:
-          xy = xy.strip()
-          if xy:
-            xy = re.split(',|;| ',xy)
-            XY.append([float(xy[0]), float(xy[1])])
-
-      self.Load(XY)
-      f.close()
-      return
-
-    # Warn user if model file does not exist
-    print('File not found.')
 
   #---------------------------------------------------------------------------------------
 
