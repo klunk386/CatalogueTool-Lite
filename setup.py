@@ -53,6 +53,8 @@ setup(
         'scipy',
         'matplotlib',
         'basemap',
+        'geojson',
+        'shapely'
     ],
     author='GEM Foundation',
     author_email='hazard@globalquakemodel.org',
